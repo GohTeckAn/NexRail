@@ -8,115 +8,121 @@ if (!isset($_SESSION['admin_id'])) {
 }
 ?>
 
+<?php
+// Database connection
+$conn = new mysqli("localhost", "root", "", "railsys");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$result = $conn->query("SELECT * FROM user");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - NexRail</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>NexRail Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
     <style>
-        .dashboard-container {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
         }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .action-btn {
-            padding: 30px 20px;
-            background-color: #2c2c2c;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
+        nav {
+            width: 200px;
+            background: #333;
+            height: 100vh;
+            padding: 20px 10px;
+            position: fixed;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
-
-        .action-btn:hover {
-            background-color: #007bff;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        nav ul {
+            list-style: none;
+            padding: 0;
         }
-
-        .action-btn i {
-            font-size: 24px;
-            margin-bottom: 10px;
+        nav ul li {
+            margin: 10px 0;
         }
-
-        .logout-btn {
-            background-color: #dc3545;
+        nav ul li button {
             color: white;
-            padding: 10px 20px;
+            background: none;
             border: none;
-            border-radius: 5px;
+            text-align: left;
+            width: 100%;
+            padding: 10px;
             cursor: pointer;
-            text-decoration: none;
-            float: right;
+            border-radius: 5px;
+            transition: background 0.3s;
         }
-
-        .logout-btn:hover {
-            background-color: #c82333;
+        nav ul li button:hover {
+            background: #444;
         }
-
-        .welcome-section {
-            color: #ffffff;
+        main {
+            margin-left: 220px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        #dynamic-content {
+            background: #444;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #666;
+        }
+        th, td {
+            padding: 10px;
             text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .welcome-section h1 {
-            margin-bottom: 10px;
-        }
-
-        .welcome-section p {
-            color: #888;
-            font-size: 1.1em;
         }
     </style>
-    <!-- Add Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <div class="header">
-        <div class="brand">NexRail Admin</div>
-        <a href="admin_logout.php" class="logout-btn">Logout</a>
-    </div>
-
-    <div class="dashboard-container">
-        <div class="welcome-section">
-            <h1>Welcome to Admin Dashboard</h1>
-            <p>Manage your train system settings and view customer complaints</p>
+    <nav>
+        <ul>
+            <li><button onclick="loadContent('overview')">Overview</button></li>
+            <li><button onclick="loadContent('user_management')">User Management</button></li>
+            <li><button onclick="loadContent('train_schedule')">Train Schedule</button></li>
+            <li><button onclick="loadContent('feedback')">Feedback</button></li>
+        </ul>
+    </nav>
+    <main>
+        <div id="dynamic-content">
+            <h2>Welcome, Admin</h2>
+            <p>Select an option from the sidebar to view data.</p>
+            <p>The Latest Ticket Price <a href="price.php"Click Here>Price</a></p>
         </div>
+    </main>
 
-        <div class="action-buttons">
-            <a href="modifyprice.php" class="action-btn">
-                <i class="fas fa-dollar-sign"></i>
-                Modify Price
-            </a>
-            <a href="Notificationpage.php" class="action-btn">
-                <i class="fas fa-comments"></i>
-                View Complaints
-            </a>
-        </div>
-    </div>
+    <script>
+        function loadContent(section) {
+            let url = '';
+            if (section === 'overview') {
+                url = 'admin_fetch_overview.php';
+            } else if (section === 'user_management') {
+                url = 'admin_fetch_user_management.php';
+            } else if (section === 'train_schedule') {
+                url = 'admin_fetch_train_schedule.php';
+            } else if (section === 'feedback') {
+                url = 'admin_fetch_feedback.php'; 
+            }
 
-    <div class="footer">
-        <p>&copy; 2024 NexRail. All rights reserved.</p>
-    </div>
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('dynamic-content').innerHTML = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>
