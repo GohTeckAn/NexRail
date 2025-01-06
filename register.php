@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($stmt->execute()) {
                 // Send verification email using PHPMailer
-                $verificationLink = "http://localhost/railsystemNexRail/verify_email.php?code=$verificationCode";
+                $verificationLink = "http://localhost/nexRail-main/verify_email.php?code=$verificationCode";
                 $subject = "Verify Your NexRail Account";
                 $message = "Hello $username,\n\nPlease click the link below to verify your email and activate your account:\n\n$verificationLink\n\nThank you,\nNexRail Team";
 
