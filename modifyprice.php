@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_price = $_POST['price_' . $id];  // Changed to use unique price field name
     
     // Update the price in the database
-    $stmt = $conn->prepare("UPDATE products SET price = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE price SET amount = ? WHERE priceId = ?");
     $stmt->bind_param("di", $new_price, $id);
     $stmt->execute();
     $stmt->close();
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Fetch all products
-$sql = "SELECT * FROM products";
+$sql = "SELECT * FROM price";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -32,11 +32,11 @@ $result = $conn->query($sql);
     <title>Modify Prices</title>
 </head>
 <body>
-    <h1>Modify Product Prices</h1>
+    <h1>Modify Train Fare</h1>
     <table border="1">
         <thead>
             <tr>
-                <th>Product</th>
+                <th>Train Service</th>
                 <th>Current Price</th>
                 <th>New Price</th>
                 <th>Action</th>

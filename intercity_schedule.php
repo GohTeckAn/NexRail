@@ -1,4 +1,10 @@
 <?php
+
+include 'auth.php';
+checkLogin();
+
+$userId = $_SESSION['userId'];
+
 // Database configuration
 $host = "localhost";
 $user = "root";
@@ -61,33 +67,30 @@ foreach ($trips1 as $tripNo) {
 </head>
 <body>
 <div class="header">
-    <div class="brand">NexRail</div>
+    <div class="brand"><a href="index.php" style="text-decoration: none; color: inherit;">NexRail</div>
     <div class="nav-links">
-        <a href="login.php">Login</a>
-        <a href="register.php">Register</a>
-        <a href="schedule.php">Train Schedule</a>
+        <span class="current-page">Train Schedule</span>
         <a href="notification.php">Notification</a>
         <a href="arrival_depart.php">Arrival/Depart</a>
         <a href="seat_selection.php">Seat Selection</a>
-        <a href="price.php">Pricing</a>
         <a href="customersupport.php">Customer Support</a>
+        <a href="logout.php">Logout</a>
     </div>
     <div class="hamburger" onclick="toggleDropdown()">
         <div></div>
         <div></div>
         <div></div>
     </div>
-    <div class="dropdown" id="dropdown">
-        <a href="login.php">Login</a>
-        <a href="register.php">Register</a>
-        <a href="schedule.php">Train Schedule</a>
+    <div class="dropdown" id="dropdown">>
+        <span class="current-page">Train Schedule</span>
         <a href="notification.php">Notification</a>
         <a href="arrival_depart.php">Arrival/Depart</a>
         <a href="seat_selection.php">Seat Selection</a>
-        <a href="price.php">Pricing</a>
         <a href="customersupport.php">Customer Support</a>
+        <a href="logout.php">Logout</a>
     </div>
 </div>
+
 <div class="container">
     <div class="title">
         <h1>KTM Intercity Schedule</h1>
@@ -180,6 +183,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+let userId = <?php echo json_encode($userId); ?>;
+console.log('User ID: ', userId);
     </script>
 </body>
 </html>

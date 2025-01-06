@@ -1,4 +1,9 @@
 <?php
+include 'auth.php';
+checkLogin();
+
+$userId = $_SESSION['userId'];
+
 // Database configuration
 $host = "localhost";
 $user = "root";
@@ -82,16 +87,14 @@ if ($stationResult->num_rows > 0) {
 </head>
 <body>
     <div class="header">
-        <div class="brand">NexRail</div>
+        <div class="brand"><a href="index.php" style="text-decoration: none; color: inherit;">NexRail</div>
         <div class="nav-links">
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
             <a href="schedule.php">Train Schedule</a>
             <a href="notification.php">Notification</a>
             <a href="arrival_depart.php">Arrival/Depart</a>
             <span class="current-page">Seat Selection</span>
-            <a href="price.php">Pricing</a>
             <a href="customersupport.php">Customer Support</a>
+            <a href="logout.php">Logout</a>
         </div>
         <div class="hamburger" onclick="toggleDropdown()">
             <div></div>
@@ -99,14 +102,12 @@ if ($stationResult->num_rows > 0) {
             <div></div>
         </div>
         <div class="dropdown" id="dropdown">
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
             <a href="schedule.php">Train Schedule</a>
             <a href="notification.php">Notification</a>
             <a href="arrival_depart.php">Arrival/Depart</a>
             <span class="current-page">Seat Selection</span>
-            <a href="price.php">Pricing</a>
             <a href="customersupport.php">Customer Support</a>
+            <a href="logout.php">Logout</a>
         </div>
     </div>
 
@@ -156,14 +157,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pax = $_POST['pax'];
 
     // Query to get available trains
-    $trainQuery = "SELECT * FROM trainSchedule WHERE stationName = '$origin' AND arrivalTime > '$departureTime' ORDER BY scheduleId";
+    $trainQuery = "
+    SELECT s.*, t.trainName, p.amount AS price, 
+           (SELECT COUNT(*) FROM seat WHERE trainNo = s.trainNo AND status = 'available') AS availableSeats
+    FROM trainSchedule s
+    JOIN train t ON s.trainNo = t.trainNo
+    JOIN price p ON t.priceId = p.priceId
+    WHERE s.stationName = '$origin' AND s.arrivalTime > '$departureTime'
+    ORDER BY s.scheduleId
+";
     $trainResult = $conn->query($trainQuery);
 
     $trains = [];
     if ($trainResult->num_rows > 0) {
         while ($row = $trainResult->fetch_assoc()) {
             // Check if destination exists in the same tripNo and trainType with a larger scheduleId
-            $destinationQuery = "SELECT * FROM trainSchedule WHERE tripNo = '{$row['tripNo']}' AND trainNo = '{$row['trainNo']}' AND stationName = '$destination' AND scheduleId > {$row['scheduleId']}";
+            $destinationQuery = "
+                    SELECT * FROM trainSchedule
+                    WHERE tripNo = '{$row['tripNo']}' AND trainNo = '{$row['trainNo']}' AND stationName = '$destination' AND scheduleId > {$row['scheduleId']}
+                ";
             $destinationResult = $conn->query($destinationQuery);
             if ($destinationResult->num_rows > 0) {
                 $destinationRow = $destinationResult->fetch_assoc();
@@ -195,8 +207,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td><?php echo $train['trainName'] . ' - ' . $train['trainNo']; ?></td>
                             <td><?php echo $train['arrivalTime']; ?></td>
                             <td><?php echo $train['destinationArrivalTime']; ?></td>
-                            <td><?php echo rand(1, 100); ?></td>
-                            <td>RM13.00</td>
+                            <td><?php echo $train['availableSeats']; ?></td>
+                            <td>RM<?php echo number_format($train['price'], 2); ?></td>
                             <td>
                                 <form method="POST" action="seat_selection_next.php">
                                 <input type="hidden" name="trainService" value="<?php echo $train['trainName'] . ' - ' . $train['trainNo']; ?>">
@@ -227,6 +239,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             destinationOptions[i].disabled = destinationOptions[i].value === origin;
         }
     });
+    let userId = <?php echo json_encode($userId); ?>;
+    console.log('User ID: ', userId);
     </script>
 </body>
 </html>

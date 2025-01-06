@@ -154,31 +154,6 @@ $conn->close();
 <body>
     <div class="header">
         <div class="brand">NexRail</div>
-        <div class="nav-links">
-            <a href="login.php">Login</a>
-            <span class="current-page">Register</span>
-            <a href="schedule.php">Train Schedule</a>
-            <a href="faq.php">FAQ</a>
-            <a href="arrival_depart.php">Arrival/Depart</a>
-            <a href="seat_selection.php">Seat Selection</a>
-            <a href="price.php">Pricing</a>
-            <a href="customersupport.php">Customer Support</a>
-        </div>
-        <div class="hamburger" onclick="toggleDropdown()">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="dropdown" id="dropdown">
-            <a href="login.php">Login</a>
-            <span class="current-page">Register</span>
-            <a href="schedule.php">Train Schedule</a>
-            <a href="notification.php">Notification</a>
-            <a href="arrival_depart.php">Arrival/Depart</a>
-            <a href="seat_selection.php">Seat Selection</a>
-            <a href="price.php">Pricing</a>
-            <a href="customersupport.php">Customer Support</a>
-        </div>
     </div>
 
     <div class="container">

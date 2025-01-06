@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $error = "Please verify your email before logging in.";
             } elseif (password_verify($password, $hashedPassword)) {
                 // Success - Start session
-                $_SESSION['user_id'] = $userId;
+                $_SESSION['userId'] = $userId;
                 $_SESSION['email'] = $email;
                 header("Location: index.php");
                 exit();
@@ -73,31 +73,6 @@ $conn->close();
     <!-- Header Section -->
     <div class="header">
         <div class="brand">NexRail</div>
-        <div class="nav-links">
-            <span class="current-page">Login</span>
-            <a href="register.php">Register</a>
-            <a href="schedule.php">Train Schedule</a>
-            <a href="notification.php">Notification</a>
-            <a href="arrival_depart.php">Arrival/Depart</a>
-            <a href="seat_selection.php">Seat Selection</a>
-            <a href="price.php">Pricing</a>
-            <a href="customersupport.php">Customer Support</a>
-        </div>
-        <div class="hamburger" onclick="toggleDropdown()">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="dropdown" id="dropdown">
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
-            <a href="schedule.php">Train Schedule</a>
-            <a href="notification.php">Notification</a>
-            <a href="arrival_depart.php">Arrival/Depart</a>
-            <a href="seat_selection.php">Seat Selection</a>
-            <a href="price.php">Pricing</a>
-            <a href="customersupport.php">Customer Support</a>
-        </div>
     </div>
 
     <!-- Login Form Section -->
