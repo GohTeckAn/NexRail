@@ -1,8 +1,5 @@
 <?php
 include 'auth.php';
-checkLogin();
-
-$userId = $_SESSION['userId'];
 ?>
 
 <!DOCTYPE html>
@@ -25,9 +22,6 @@ $userId = $_SESSION['userId'];
             <a href="logout.php">Logout</a>
         </div>
         <div class="hamburger" onclick="toggleDropdown()">
-            <div></div>
-            <div></div>
-            <div></div>
         </div>
         <div class="dropdown" id="dropdown">
             <a href="schedule.php">Train Schedule</a>
@@ -37,10 +31,42 @@ $userId = $_SESSION['userId'];
             <a href="customersupport.php">Customer Support</a>
             <a href="logout.php">Logout</a>
         </div>
+
     </div>
-    <div>
-        <h1>You got 0 notification</h1>
-        <!--Add your contents here-->
+    <div class="container">
+        <?php
+        $conn = new mysqli("localhost", "root", "", "railsys");
+
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        function fetch_announcements() {
+            global $conn; 
+
+            $stmt = $conn->prepare("SELECT * FROM announcements ORDER BY created_at DESC"); 
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result;
+        }
+
+        $announcements = fetch_announcements();
+
+        echo "<h3>Announcements</h3>";
+
+        if ($announcements->num_rows > 0) {
+            echo "<ul>";
+            while ($row = $announcements->fetch_assoc()) {
+                echo "<li><strong>" . $row["title"] . "</strong><br>" . $row["content"] . "</li>";
+            }
+            echo "</ul>";
+        } else {
+            echo "<p>No announcements found.</p>";
+        }
+
+        $conn->close();
+        ?>
     </div>
     <div class="footer">
         <p>&copy; 2024 NexRail. All rights reserved.</p>
