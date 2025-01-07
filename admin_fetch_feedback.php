@@ -21,7 +21,7 @@ $feedbacks = fetch_feedback();
 echo "<h3>Customer Feedback</h3>";
 echo "<a href='create_announce.php'>Create Annoucement</a><br><br>";
 echo "<table border='1'>";
-echo "<tr><th>ID</th><th>Customer ID</th><th>Customer Name</th><th>Issue</th><th>Contact Details</th><th>Submitted At</th></tr>";
+echo "<tr><th>ID</th><th>Customer Email</th><th>Customer Name</th><th>Issue</th><th>Contact Details</th><th>Submitted At</th></tr>";
 
 while ($row = $feedbacks->fetch_assoc()) {
     echo "<tr>";
