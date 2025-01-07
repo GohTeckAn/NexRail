@@ -107,11 +107,11 @@ $userId = $_SESSION['userId'];
         <h1>Customer Support Form</h1>
         <form action="submit_support.php" method="POST">
             <div class="form-group">
-                <label for="customer-id">Customer ID</label>
-                <input type="text" id="customer-id" name="customer_id" placeholder="Enter your Customer ID" required>
+                <label for="customer-id">Email</label>
+                <input type="text" id="customer-id" name="customer_id" placeholder="Enter your email" required>
             </div>
             <div class="form-group">
-                <label for="customer-name">Customer Name</label>
+                <label for="customer-name">Name</label>
                 <input type="text" id="customer-name" name="customer_name" placeholder="Enter your Name" required>
             </div>
             <div class="form-group">
